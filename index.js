@@ -1,36 +1,47 @@
 
-const canvasWidth = 400;
+const deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+const canvasWidth = deviceWidth -50;
 const canvasHeight = 400;
 const resolution = 8;
 const cols = Math.floor(canvasWidth / resolution);
 const rows = Math.floor(canvasHeight / resolution);
 const currentGen = make2dArray(cols, rows);
 const nextGen = make2dArray(cols, rows);
-let nextGenReady = false;
+let randomValue = 0.8;
+let nextGenReady = true;
 let fillcolor;
+let stop = false;
+
+const buttonPause = document.querySelector('#pause');
+buttonPause.addEventListener('click', () => {
+    stop = !stop;
+});
+
+const buttonReset = document.querySelector('#reset');
+buttonReset.addEventListener('click', setupRandomValues);
 
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
-let stop = false;
 let frameCount = 0;
 let fps, fpsInterval, startTime, now, then, elapsed;
 let totalLive = 0;
 
 // Make random initial conditions for grid
-for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-        currentGen[i][j] = Math.random() < 0.8 ? 0 : 1;
+function setupRandomValues() {
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            currentGen[i][j] = Math.random() < randomValue ? 0 : 1;
+        }
     }
+    // Copy values to next generation
+    copy2dArrayValues(nextGen, currentGen);
 }
 
-// Copy values to next generation
-copy2dArrayValues(nextGen, currentGen);
+setupRandomValues()
 startAnimating(60);
-
-
 // initialize the timer variables and start the animation
 function startAnimating(fps) {
     fpsInterval = 1000 / fps;
@@ -46,7 +57,7 @@ function draw() {
     now = Date.now();
     elapsed = now - then;
     
-    if (elapsed > fpsInterval && nextGenReady) {
+    if (elapsed > fpsInterval && nextGenReady && !stop) {
         then = now - (elapsed % fpsInterval);
         for (let i = 0; i < cols; i++) {
             for (let j = 0; j < rows; j++) {

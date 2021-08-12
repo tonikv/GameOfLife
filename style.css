@@ -11,3 +11,19 @@ body {
     flex-direction: column;
 
 }
+
+.center {
+    padding: 0;
+    margin: 2px 0 2px 0;
+}
+
+#controls {
+    padding: 0 2px 0 2px;
+    margin-bottom: 10px;
+}
+
+
+.border {
+    border-radius: 10px;
+    color:black;
+}
