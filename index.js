@@ -1,13 +1,19 @@
 
 const deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+const deviceHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
 const canvasWidth = deviceWidth -50;
-const canvasHeight = 400;
+const canvasHeight = deviceHeight - 250;
 let resolution, cols, rows, currentGen, nextGen, fillcolor;
-
+let fps, fpsInterval, startTime, now, then, elapsed;
 let randomValue = 0.8;
+let totalLive = 0;
+let frameCount = 0;
 let nextGenReady = true;
 let stop = false;
 
+//Start setup
+setupGridAndResolution(8);
+startAnimating(60);
 
 const buttonPause = document.querySelector('#pause');
 buttonPause.addEventListener('click', () => {
@@ -20,16 +26,10 @@ buttonReset.addEventListener('click', setupRandomValues);
 const buttonResolution = document.querySelector('#res')
 buttonResolution.addEventListener('click', changeResolution);
 
-setupGridAndResolution(8);
-
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
-
-let frameCount = 0;
-let fps, fpsInterval, startTime, now, then, elapsed;
-let totalLive = 0;
 
 // Make random initial conditions for grid
 function setupRandomValues() {
@@ -42,8 +42,6 @@ function setupRandomValues() {
     copy2dArrayValues(nextGen, currentGen);
 }
 
-setupRandomValues()
-startAnimating(60);
 // initialize the timer variables and start the animation
 function startAnimating(fps) {
     fpsInterval = 1000 / fps;
@@ -67,7 +65,7 @@ function draw() {
                 let x = i * resolution;
                 let y = j * resolution;
                 if (value == 0) {
-                    fillcolor = "rgba(0,110,0,255)";
+                    fillcolor = "rgba(0,0,0,255)";
                 } else {
                     fillcolor = "rgba(255,255,255,255)"
                 }
@@ -136,6 +134,9 @@ function copy2dArrayValues(target, source) {
 function changeResolution() {
     let input = document.querySelector('#resolution')
     let value = input.value;
+    if (value < 1 || value > 20) {
+        value = 8;
+    }
     setupGridAndResolution(value);
 }
 

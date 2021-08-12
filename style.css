@@ -2,6 +2,9 @@ body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    background-color: black;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
 }
 
 .container {
@@ -9,12 +12,17 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
 }
 
 .center {
     padding: 0;
     margin: 2px 0 2px 0;
+}
+
+.button_big {
+    font-family: 'Roboto Condensed', sans-serif;
+    padding: 12px 12px;
+    border-radius: 1px;
 }
 
 .controlstyle {
