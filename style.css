@@ -22,8 +22,6 @@ body {
     margin-bottom: 10px;
 }
 
-
-.border {
-    border-radius: 10px;
-    color:black;
+.form {
+    margin-top: 10px;
 }

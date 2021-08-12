@@ -2,15 +2,12 @@
 const deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 const canvasWidth = deviceWidth -50;
 const canvasHeight = 400;
-const resolution = 8;
-const cols = Math.floor(canvasWidth / resolution);
-const rows = Math.floor(canvasHeight / resolution);
-const currentGen = make2dArray(cols, rows);
-const nextGen = make2dArray(cols, rows);
+let resolution, cols, rows, currentGen, nextGen, fillcolor;
+
 let randomValue = 0.8;
 let nextGenReady = true;
-let fillcolor;
 let stop = false;
+
 
 const buttonPause = document.querySelector('#pause');
 buttonPause.addEventListener('click', () => {
@@ -19,6 +16,14 @@ buttonPause.addEventListener('click', () => {
 
 const buttonReset = document.querySelector('#reset');
 buttonReset.addEventListener('click', setupRandomValues);
+
+const formEL = document.querySelector('#changeResolution')
+formEL.addEventListener('submit', (event) => {
+    event.preventDefault();
+    setupGridAndResolution(formEL[0].value);
+})
+
+setupGridAndResolution(8);
 
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
@@ -100,7 +105,7 @@ function checkNeigbors(array, x, y) {
     for (let i = - 1; i < 2; i++) {
         for (let j = -1; j < 2; j++) {
 
-            if (x + i > -1 && x + i < cols && y + j > -1 && y + 1 < rows) {
+            if (x + i > -1 && x + i < array.length && y + j > -1 && y + 1 < array[0].length) {
                 if (array[x + i][y + j] == 1) {
                     alive += 1;
                 }
@@ -129,4 +134,13 @@ function copy2dArrayValues(target, source) {
             target[i][j] = source[i][j];
         }
     }
+}
+
+function setupGridAndResolution(value) {
+    resolution = value
+    cols = Math.floor(canvasWidth / resolution);
+    rows = Math.floor(canvasHeight / resolution);
+    currentGen = make2dArray(cols, rows);
+    nextGen = make2dArray(cols, rows);
+    setupRandomValues()
 }

@@ -15,8 +15,13 @@
             <button id="pause"> Pause / Play</button>
             <button id="reset"> Reset Simulation</button>
         </div>
-        <div class="border">
-            <canvas id="myCanvas"></canvas>
+        <canvas id="myCanvas"></canvas>
+        <div id="controlsBelow"> 
+            <form id="changeResolution" class="form">
+                <label for="resolution">Resolution</label>
+                <input type="number" id="resolution" default="8" min="1" max="20" value="8">
+                <button type="submit">Submit</button>
+            </form>
         </div>
     </div>  
 </body>
