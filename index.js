@@ -17,11 +17,8 @@ buttonPause.addEventListener('click', () => {
 const buttonReset = document.querySelector('#reset');
 buttonReset.addEventListener('click', setupRandomValues);
 
-const formEL = document.querySelector('#changeResolution')
-formEL.addEventListener('submit', (event) => {
-    event.preventDefault();
-    setupGridAndResolution(formEL[0].value);
-})
+const buttonResolution = document.querySelector('#res')
+buttonResolution.addEventListener('click', changeResolution);
 
 setupGridAndResolution(8);
 
@@ -134,6 +131,12 @@ function copy2dArrayValues(target, source) {
             target[i][j] = source[i][j];
         }
     }
+}
+
+function changeResolution() {
+    let input = document.querySelector('#resolution')
+    let value = input.value;
+    setupGridAndResolution(value);
 }
 
 function setupGridAndResolution(value) {

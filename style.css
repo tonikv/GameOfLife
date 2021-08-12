@@ -17,9 +17,10 @@ body {
     margin: 2px 0 2px 0;
 }
 
-#controls {
+.controlstyle {
     padding: 0 2px 0 2px;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .form {
