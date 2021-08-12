@@ -1,0 +1,121 @@
+
+const canvasWidth = 400;
+const canvasHeight = 400;
+const resolution = 8;
+const cols = Math.floor(canvasWidth / resolution);
+const rows = Math.floor(canvasHeight / resolution);
+const currentGen = make2dArray(cols, rows);
+const nextGen = make2dArray(cols, rows);
+let nextGenReady = false;
+let fillcolor;
+
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
+
+let stop = false;
+let frameCount = 0;
+let fps, fpsInterval, startTime, now, then, elapsed;
+let totalLive = 0;
+
+// Make random initial conditions for grid
+for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+        currentGen[i][j] = Math.random() < 0.8 ? 0 : 1;
+    }
+}
+
+// Copy values to next generation
+copy2dArrayValues(nextGen, currentGen);
+startAnimating(60);
+
+
+// initialize the timer variables and start the animation
+function startAnimating(fps) {
+    fpsInterval = 1000 / fps;
+    then = Date.now();
+    startTime = then;
+    draw();
+}
+
+
+// Draw grid
+function draw() {
+    requestAnimationFrame(draw);
+    now = Date.now();
+    elapsed = now - then;
+    
+    if (elapsed > fpsInterval && nextGenReady) {
+        then = now - (elapsed % fpsInterval);
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                let value = currentGen[i][j];
+                let x = i * resolution;
+                let y = j * resolution;
+                if (value == 0) {
+                    fillcolor = "rgba(0,110,0,255)";
+                } else {
+                    fillcolor = "rgba(255,255,255,255)"
+                }
+                ctx.fillStyle = fillcolor;
+                ctx.fillRect(x, y, x + resolution, y + resolution);
+            }
+        }
+        nextGenReady = false;
+    }
+    getNextGeneration();
+}
+
+
+function getNextGeneration() {
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            let aliveCount = checkNeigbors(currentGen, i, j);
+            if (currentGen[i][j] == 0 && aliveCount == 3) {
+                nextGen[i][j] = 1;
+            }
+            if (currentGen[i][j] == 1 && (aliveCount < 2 || aliveCount > 3)) {
+                nextGen[i][j] = 0;
+            } 
+        }
+    }
+    copy2dArrayValues(currentGen, nextGen);
+    nextGenReady = true
+}
+
+function checkNeigbors(array, x, y) {
+    let alive = 0;
+    for (let i = - 1; i < 2; i++) {
+        for (let j = -1; j < 2; j++) {
+
+            if (x + i > -1 && x + i < cols && y + j > -1 && y + 1 < rows) {
+                if (array[x + i][y + j] == 1) {
+                    alive += 1;
+                }
+            }
+        }
+    }
+    // Ignore own status if alive
+    if (array[x][y] == 1) {
+        alive -= 1;
+    }
+    return alive;
+}
+
+
+function make2dArray(cols, rows) {
+    let arr = new Array(cols);
+    for (let i = 0; i < arr.length; i++) {
+        arr[i] = new Array(rows);
+    }
+    return arr;
+}
+
+function copy2dArrayValues(target, source) {
+    for (let i = 0; i < target.length; i++) {
+        for (let j = 0; j < target[0].length; j++) {
+            target[i][j] = source[i][j];
+        }
+    }
+}
