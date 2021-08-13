@@ -14,7 +14,11 @@
 <body>
     <div class="container">
         <h1 class="center"> GAME OF LIFE </h1>
-        <div id="controls" class="controlstyle"> 
+        <div id="controls" class="controlstyle">
+            <div class="flex_row">
+                <input class="button_color" type="color" value="#FFFFFF" id="alive"><label class="block" for="alive"> Alive </label>
+                <input class="button_color" type="color" value="#000000" id="dead"><label class="block" for="dead"> Dead </label>
+            </div> 
             <button class="button_big" id="pause"> Pause / Play</button>
             <button class="button_big" id="reset"> Reset Simulation</button>
         </div>
@@ -25,7 +29,7 @@
             <button class="button" id="res">Change</button>
         </div>
         <div id="statistics"></div>
-        <div id=""
+        <div id="morestatistics"></div>
     </div>  
 </body>
 </html>

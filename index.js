@@ -2,10 +2,10 @@
 const deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 const deviceHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
 const canvasWidth = deviceWidth -50;
-const canvasHeight = deviceHeight - 200;
-let resolution, cols, rows, currentGen, nextGen, fillcolor;
+const canvasHeight = deviceHeight - 250;
+let resolution, cols, rows, currentGen, nextGen, fillcolor, aliveColor, deadColor;
 let fps, fpsInterval, startTime, now, then, elapsed;
-let randomValue = Math.random();
+let randomValue = 0.6;
 let evolutionCount = 0;
 let changesInGeneration = 0;
 let previousChanges = 0;
@@ -16,17 +16,20 @@ let stop = false;
 
 // Controls 
 const buttonPause = document.querySelector('#pause');
-buttonPause.addEventListener('click', () => {
-    stop = !stop;
-});
+buttonPause.addEventListener('click', () =>  stop = !stop);
 const buttonReset = document.querySelector('#reset');
 buttonReset.addEventListener('click', setupRandomValues);
 const buttonResolution = document.querySelector('#res')
 buttonResolution.addEventListener('click', changeResolution);
+const colorAliveEl = document.querySelector('#alive');
+colorAliveEl.addEventListener('input', changeColor);
+const colorDeadEl = document.querySelector('#dead');
+colorDeadEl.addEventListener('input', changeColor);
 
 // Statistics (show some information about simulation)
 const statisticEl = document.querySelector('#statistics');
 statisticEl.innerHTML = `Generation count ${evolutionCount} : Changes in generation ${changesInGeneration}`;
+const stoppedEl = document.querySelector('#morestatistics');
 
 //Initial setup and start animation loop (Make 2d grid for simulation and fill it with random values)
 setupGridAndResolution(8);
@@ -38,8 +41,15 @@ const ctx = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
+function changeColor() {
+    aliveColor = document.querySelector('#alive').value;
+    deadColor = document.querySelector('#dead').value;
+}
+
 // Make random initial conditions for grid and reset simulation settings
 function setupRandomValues() {
+    changeColor()
+    stoppedEl.innerHTML = `Simulation unstable`;
     toleranceToStop = 100;
     stop = false;
     evolutionCount = 0;
@@ -76,9 +86,9 @@ function draw() {
                 let x = i * resolution;
                 let y = j * resolution;
                 if (value == 0) {
-                    fillcolor = "rgba(0,0,0,255)";
+                    fillcolor = deadColor;
                 } else {
-                    fillcolor = "rgba(255,255,255,255)"
+                    fillcolor = aliveColor;
                 }
                 ctx.fillStyle = fillcolor;
                 ctx.fillRect(x, y, x + resolution, y + resolution);
@@ -114,6 +124,7 @@ function getNextGeneration() {
         }
         if (toleranceToStop < 0) {
             stop = true;
+            stoppedEl.innerHTML = `Simulation stable at generation ${evolutionCount + 1}`;
         }
     // 
     copy2dArrayValues(currentGen, nextGen);
@@ -172,7 +183,7 @@ function changeResolution() {
     setupGridAndResolution(value);
 }
 
-// Make grid acording to resolution (Basicly resolution is size of one cell..)
+// Make grid acording to resolution (Basicly resolution is size of one cell - smaller is more resolution in simulation)
 function setupGridAndResolution(value) {
     resolution = value
     cols = Math.floor(canvasWidth / resolution);
