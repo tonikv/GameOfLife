@@ -1,3 +1,7 @@
+/* Game of life simulation
+    Classics cellular automaton simulation where simple rules gives complex results. Goal was to make mobile friendly application
+    More information at https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+*/
 
 const deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 const deviceHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
@@ -28,7 +32,6 @@ colorDeadEl.addEventListener('input', changeColor);
 
 // Statistics (show some information about simulation)
 const statisticEl = document.querySelector('#statistics');
-statisticEl.innerHTML = `Generation count ${evolutionCount} : Changes in generation ${changesInGeneration}`;
 const stoppedEl = document.querySelector('#morestatistics');
 
 //Initial setup and start animation loop (Make 2d grid for simulation and fill it with random values)
@@ -99,7 +102,7 @@ function draw() {
     getNextGeneration();
 }
 
-// Check neighbors and compute next state according to the rules (https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
+// Check neighbors and compute next state according to the rules
 // Also check if simulation has become stable - stop if this happens
 function getNextGeneration() {
     if (!stop) {
@@ -129,7 +132,7 @@ function getNextGeneration() {
     // 
     copy2dArrayValues(currentGen, nextGen);
     evolutionCount++;
-    statisticEl.innerHTML = `Generation count ${evolutionCount} : Changes in generation ${changesInGeneration}`;
+    statisticEl.innerHTML = `Generation ${evolutionCount} : Mutations ${changesInGeneration}`;
     previousChanges = changesInGeneration;
     nextGenReady = true;
     }
