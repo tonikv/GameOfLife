@@ -1,5 +1,5 @@
 /* Game of life simulation
-    Classics cellular automaton simulation where simple rules gives complex results. Goal was to make mobile friendly application
+    Classical cellular automaton simulation where simple rules gives complex results. Goal was to make mobile friendly application
     More information at https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 */
 
@@ -15,7 +15,6 @@ let changesInGeneration = 0;
 let previousChanges = 0;
 let toleranceToStop = 100;
 let frameCount = 0;
-let nextGenReady = true;
 let stop = false;
 
 // Controls 
@@ -36,7 +35,7 @@ const stoppedEl = document.querySelector('#morestatistics');
 
 //Initial setup and start animation loop (Make 2d grid for simulation and fill it with random values)
 setupGridAndResolution(8);
-startAnimating(60);
+startAnimating(30);
 
 // Setup canvas for drawing - Todo alter size if windows size is changed
 const canvas = document.getElementById('myCanvas');
@@ -80,7 +79,7 @@ function draw() {
     now = Date.now();
     elapsed = now - then;
     
-    if (elapsed > fpsInterval && nextGenReady && !stop) {
+    if (elapsed > fpsInterval && !stop) {
         then = now - (elapsed % fpsInterval);
         // Go through all the cells and draw them
         for (let i = 0; i < cols; i++) {
@@ -97,7 +96,6 @@ function draw() {
                 ctx.fillRect(x, y, x + resolution, y + resolution);
             }
         }
-        nextGenReady = false;
     }
     getNextGeneration();
 }
@@ -130,11 +128,11 @@ function getNextGeneration() {
             stoppedEl.innerHTML = `Simulation stable at generation ${evolutionCount + 1}`;
         }
     // 
+    //
     copy2dArrayValues(currentGen, nextGen);
     evolutionCount++;
     statisticEl.innerHTML = `Generation ${evolutionCount} : Mutations ${changesInGeneration}`;
     previousChanges = changesInGeneration;
-    nextGenReady = true;
     }
 }
 
